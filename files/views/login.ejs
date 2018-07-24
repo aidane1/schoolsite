@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title></title>
+    <script>
+
+    </script>
+    <style>
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+      body {
+        padding: 0px;
+        margin: 0px;
+        background-color: #67ac5b;
+      }
+      /* .backdrop {
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: absolute;
+
+      } */
+      /* #login {
+        width: 90%;
+        height: 50%;
+        display: block;
+        margin: auto;
+        background-color: white;
+        border-radius: 15px;
+        margin-top: 15%;
+      } */
+      #login {
+        display: block;
+        margin: auto;
+
+        width: 90%;
+        bottom: 100px;
+      }
+      .userInput {
+        display: block;
+        width: 100%;
+        border: 1px solid grey;
+        height: 40px;
+        outline: none;
+
+      }
+      #submit {
+        width: 100%;
+        height: 30px;
+        background-color: #00bdef;
+        font-size: 15px;
+        color: white;
+        margin-top: 10px;
+        outline: none;
+        border: none;
+      }
+      #submit:active {
+        background-color: #0093f1;
+      }
+      .error {
+        color: red;
+        width: 100%;
+        text-align: center;
+        font-size: 10px;
+        position: absolute;
+        top: 50px;
+
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "backdrop">
+      <div class = "error">
+        <%=error%>
+      </div>
+      <div style = "width: 100%; height: 200px; display: block;">
+
+      </div>
+      <div id = "login">
+        <form id = "inputs" method = "POST" action = "/login">
+          <label for "logname">Username/Email: </label><input type = "text" name = "logname" placeholder = "Enter Username..." class = "userInput"/>
+          <br>
+          <label for "logword">Password: </label><input type = "password" name = "logword" placeholder = "Enter Password..."class = "userInput"/>
+          <br>
+          <input type = "submit" id = "submit">
+        </form>
+        <br>
+        <br>
+        <i><h6>don't have an account? <a href = "/signup">sign up</a> or login as <a href = "">guest</a>
+      </div>
+    </div>
+  </body>
+</html>

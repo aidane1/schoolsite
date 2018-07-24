@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title></title>
+    <script>
+      function displayFunction(id, name) {
+        document.getElementById("coursesDisplay").style.display = "none";
+        document.getElementById("submit").style.display = "block";
+        document.getElementById("header").innerHTML = name;
+        document.getElementById("courseID").value = id;
+      }
+      function submitType(type) {
+        var submitBox = document.getElementById("submitTypes");
+        submitBox.innerHTML = "";
+
+
+        var input = document.createElement("input");
+        var secondInput = document.createElement("input");
+        input.name = "page";
+        secondInput.name = "questions";
+
+        var label = document.createElement("label");
+        var secondLabel = document.createElement("label");
+
+
+        var textarea = document.createElement("textarea");
+        textarea.name = "assignment";
+        var thirdLabel = document.createElement("label");
+
+        if (type === 1) {
+          textarea.style.display = "none";
+          thirdLabel.style.display = "none";
+          label.innerHTML = "Page number: &nbsp;&nbsp;&nbsp;&nbsp; pg.";
+          secondLabel.innerHTML = "Question numbers:   #";
+          input.type = "number";
+          secondInput.className = "questions";
+          input.className = "page";
+          textarea.value = "";
+        } else if (type === 2) {
+          input.type = "hidden";
+          secondInput.type = "hidden";
+          label.style.display = "none";
+          secondLabel.style.display = "none";
+          thirdLabel.className = "textareaLabel";
+          thirdLabel.innerHTML = "Assignment: (please describe)";
+          textarea.className = "assignment";
+          input.value = "";
+          secondInput.value = "";
+        }
+        submitBox.appendChild(label);
+        submitBox.appendChild(input);
+        submitBox.appendChild(document.createElement("br"));
+        submitBox.appendChild(document.createElement("br"));
+        submitBox.appendChild(secondLabel);
+        submitBox.appendChild(secondInput);
+        submitBox.appendChild(thirdLabel);
+        submitBox.appendChild(textarea);
+
+      }
+
+      // #4971b7
+      // #315491
+      // #1f3a68
+
+    </script>
+    <style>
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #1f3a68;
+      }
+      .coursesDisplay {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      .course {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        background: linear-gradient(#75a7ff, #4971b7);
+        padding: 0;
+        border: none;
+        outline: none;
+        font-size: 35px;
+        color: white;
+      }
+      .course:active {
+        background: linear-gradient(#0f6abf, #0b3a66);
+      }
+      /* .submit {
+        display: none;
+
+        width: 100%;
+        height: 100%;
+      } */
+      .notes {
+        position: absolute;
+        width: 80%;
+        left: 10%;
+        height: 200px;
+        outline: none;
+        display: block;
+
+
+      }
+      .option {
+        width: 35%;
+        height: 50px;
+        outline: none;
+        display: block;
+        margin: auto;
+        margin-top: 20px;
+        background-color: #75a7ff;
+        color: white;
+        font-size: 18px;
+      }
+      .text {
+        width: 80%;
+        height: 30px;
+        display: block;
+        margin: auto;
+        margin-top: 30%;
+        color: white;
+      }
+      .header {
+        width: 100%;
+        height: 40px;
+        text-align: center;
+        /* margin-top: 10px; */
+        font-size: 25px;
+        color: white;
+      }
+
+      label {
+        color: white;
+      }
+      .page {
+        outline: none;
+      }
+      .questions {
+        outline: none;
+      }
+      #submitTypes {
+        width: 100%;
+        margin: auto;
+        margin-top: 35px;
+      }
+      .submitButton {
+        width: 45%;
+        height: 30px;
+        border-radius: 5px;
+        background-color: #26a4ff;
+        display: block;
+        position: absolute;
+        left: 27.5%;
+        bottom: 45px;
+        outline: none;
+      }
+      .textareaLabel {
+        width: 80%;
+        display: block;
+        margin: auto;
+        color: grey;
+      }
+      .assignment {
+        width: 80%;
+        position: absolute;
+        left: 10%;
+        height: 100px;
+        display: block;
+        top: 15%;
+        outline: none;
+      }
+      .submit {
+        display: none;
+      }
+      .backButton {
+        position: absolute;
+        width: 60px;
+        height: 30px;
+        background-color: red;
+        border: none;
+        outline: none;
+        left: 5px;
+        top: 25px;
+
+      }
+      .backButton a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class = "back" style = "font-size: 40px; position: fixed; top:10px">
+      <a href = "/" style = "text-decoration:none; color:blue">&#8592;</a>
+    </div>
+    <div id = "coursesDisplay" class = "coursesDisplay">
+
+      <% courses.forEach(function(course) { %>
+        <button class = "course" onclick = "displayFunction('<%=course._id%>', '<%=course.course%>')"><%=course.course%></button>
+      <% }); %>
+    </div>
+    <form id = "submit" class = "submit" method = "POST" action = "/submit">
+      <input type = "hidden" name = "courseID" id = "courseID" />
+      <input type = "hidden" name = "submittedBy" id = "submittedBy" value = "<%=user%>"/>
+      <input type = "hidden" name = "confirmed" id = "confirmed" value = "false"/>
+      <div class = "header" id = "header"></div>
+      <div id = "submitTypes">
+        <button class = "option" onclick = "submitType(1)">Textbook</button>
+        <button class = "option" onclick = "submitType(2)">Assignment</button>
+      </div>
+      <div class = "text">notes: </text>
+      <textarea class = "notes" name = "notes">
+
+      </textarea>
+      <input type = "submit" class = "submitButton">
+    </form>
+  </body>
+</html>

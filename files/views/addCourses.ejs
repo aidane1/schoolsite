@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <script src = "js/datalist-polyfill.min.js"></script>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+
+    <script>
+
+
+      var dataArray = [["MSC-10", "Science 10"],["MBI-11","Biology 11"],["MBI-12","Biology 12"],["MCH-11","Chemistry 11"],["MCH-12","Chemistry 12"], ["MPH-11", "Physics 11"], ["MPH-12","Physics 12"], ["MSCT-11","Horticulture Science 11"], ["MSS-10","Socials 10"], ["MESC-11","Human Geography 11"], ["MSS-11","Socials 11"], ["MHI-12","History 12"], ["MLAW-12","Law 12"], ["MIDS-2F","Law/Psyc 12"], ["YPSYC2A", "Psyc 12"], ["MPE-10", "PE 10"], ["MPE-11", "PE 11"], ["MPE-12", "PE 12"], ["MEN-12", "English 12"], ["MEN-11", "English 11"], ["MLIT-12", "English Literature 12"], ["MFMP-10", "Math 10"], ["MWPM-10", "Workplace Math 10"], ["MAWM-11", "A&W Math 11"], ["MFOM-11", "Foundation of Math 11"], ["MPREC-11", "Precalculus 11"], ["MAWM-12", "A&W Math 12"], ["MCALC-12", "Calculus 12"], ["MFOM-12", "Foundations of Math 12"], ["MPREC-12", "Precalculus 12"]];
+
+      var teacherList = ["Mr.Austin", "Mr.Fowler", "Mr.Fraser", "Mr.Landry", "Mme.Arthurson", "Mr.Bradshaw"];
+
+      var radioValue = null;
+
+      var courses = [];
+      function addCourse(input) {
+        var found = false;
+        var value = input.parentNode.children[0].value;
+        var teacher = input.parentNode.children[1].value;
+        var radio = radioValue.value;
+
+
+        for (var i = 0; i < dataArray.length; i++) {
+          if (dataArray[i][1] == value) {
+            found = true;
+            courses.push([dataArray[i][0], dataArray[i][1], teacher, radio]);
+          }
+        }
+        if(!found || !radio || !teacher) {
+
+        } else {
+          var displayNode = document.createElement("div");
+          displayNode.innerHTML = teacher + "'s " + value + " block: " + radio;
+          displayNode.className = "display";
+          document.getElementById("courses").appendChild(displayNode);
+          input.parentNode.children[0].value = "";
+          input.parentNode.children[1].value = "";
+          radioValue.parentNode.remove();
+          radioValue = null;
+        }
+      }
+
+
+
+      function postFunction() {
+        var form = document.createElement("form");
+        form.setAttribute("method", "POST");
+        form.setAttribute("action", "/courses");
+
+        for (var i = 0; i < courses.length; i++) {
+          var hiddenField1 = document.createElement("input");
+          var hiddenField2 = document.createElement("input");
+          var hiddenField3 = document.createElement("input");
+          var hiddenField4 = document.createElement("input");
+          hiddenField1.setAttribute("type", "hidden");
+          hiddenField1.setAttribute("name", "coursesCode");
+          hiddenField1.setAttribute("value", courses[i][0]);
+          hiddenField2.setAttribute("type", "hidden");
+          hiddenField2.setAttribute("name", "coursesName");
+          hiddenField2.setAttribute("value", courses[i][1]);
+          hiddenField3.setAttribute("type", "hidden");
+          hiddenField3.setAttribute("name", "coursesTeacher");
+          hiddenField3.setAttribute("value", courses[i][2]);
+          hiddenField4.setAttribute("type", "hidden");
+          hiddenField4.setAttribute("name", "coursesBlock");
+          hiddenField4.setAttribute("value", courses[i][3]);
+          form.appendChild(hiddenField1);
+          form.appendChild(hiddenField2);
+          form.appendChild(hiddenField3);
+          form.appendChild(hiddenField4);
+        }
+        document.body.appendChild(form);
+        form.submit();
+      }
+
+      function radioFunction(value) {
+        radioValue = value;
+      }
+
+
+
+
+      window.onload = function() {
+        var datalist = document.createElement("datalist");
+        datalist.id = "coursesList";
+        for (var i = 0; i < dataArray.length; i++) {
+          var child = document.createElement("option");
+          child.value = dataArray[i][1];
+          child.innerHTML = dataArray[i][1];
+          datalist.appendChild(child);
+        }
+        document.getElementById("courseHolder").appendChild(datalist);
+
+        var teacherDatalist = document.createElement("datalist");
+        teacherDatalist.id = "teacherList";
+        for (var i = 0; i < teacherList.length; i++) {
+          var child = document.createElement("option");
+          child.value = teacherList[i];
+          child.innerHTML = teacherList[i];
+          teacherDatalist.appendChild(child);
+        }
+        document.getElementById("courseHolder").appendChild(teacherDatalist);
+
+
+
+
+      }
+
+
+
+
+
+    </script>
+    <style>
+      * {
+        font-family: sans-serif;
+      }
+      body {
+        padding: 0px;
+        margin: 0px;
+        background-color: #67ac5b;
+      }
+      label {
+        color: white;
+      }
+      .courseHolder {
+        width: 95%;
+        height: 100%;
+        display: block;
+        margin: auto;
+        margin-top: 50px;
+      }
+      .courseHolder .addCourse {
+        height: 35px;
+        width: 80%;
+        font-size: 19px;
+        outline: none;
+        display: block;
+        margin: auto;
+        border-bottom: 2px solid black;
+        border-top:0px;
+        border-left:0px;
+        border-right:0px;
+      }
+      .courseHolder .submitCourse {
+        height: 35px;
+        width: 80%;
+        background-color: #26a4ff;
+        display: block;
+        margin: auto;
+        margin-top: 15px;
+        border-radius: 6px;
+        color: white;
+        font-size: 20px;
+        outline: none;
+      }
+      .display {
+        padding: 10px;
+        font-size: 15px;
+        color: white;
+      }
+      .done {
+        width: 100%;
+        height: 60px;
+        display: block;
+        font-size: 25px;
+        background-color: #26a4ff;
+        border-radius: 9px;
+        outline: none;
+        position: absolute;
+        bottom: 0px;
+      }
+      input[type="radio"] {
+        width: 30px;
+        height: 30px;
+        vertical-align: middle;
+      }
+      .radioText {
+        color: white;
+        display: block;
+        font-size: 15px;
+        margin-top: 15px;
+      }
+      #header {
+        display: block;
+        margin: auto;
+        width: 200px;
+        font-size: 20px;
+        margin-top: 5px;
+      }
+      .later {
+        width:60px;
+        height: 30px;
+        background-color: white;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        border-radius: 10px;
+      }
+      .later a {
+        text-decoration: none;
+        font-size: 15px;
+        color: blue;
+
+      }
+
+      #coursesList .polyfilling {
+        position: fixed;
+        top: 85px;
+        left: 11%;
+      }
+      #teacherList .polyfilling {
+        position: fixed;
+        top: 120px;
+        left: 11%;
+      }
+      .polyfilling {
+        width: 80px;
+
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <div id = "courses" class = "courses">
+      <button type = "button" class = "later"><a href = "/">later</a></button>
+      <div class = "courseHolder" id = "courseHolder">
+
+        <input list = "coursesList" class = "addCourse" type = "text" placeholder = "Enter a course..." name = "course[]" id = "coursePicker" />
+        <input list = "teacherList" type = "text" class = "addCourse" placeholder = "enter your teacher..." name = "teacher" id = "teacherPicker" />
+
+        <div id = "header">Enter the class Block: </div>
+        <div class = "radioText"><input type="radio" name="block" value="A"  onclick = "radioFunction(this)">A (first class Monday at 9:20 AM)</div>
+        <div class = "radioText"><input type="radio" name="block" value="B"  onclick = "radioFunction(this)">B (first class Monday at 11:00 AM)</div>
+        <div class = "radioText"><input type="radio" name="block" value="C"  onclick = "radioFunction(this)">C (first class Monday at 12:45 PM)</div>
+        <div class = "radioText"><input type="radio" name="block" value="D"  onclick = "radioFunction(this)">D (first class Monday at 2:16 PM)</div>
+        <div class = "radioText"><input type="radio" name="block" value="E"  onclick = "radioFunction(this)">E (first class Tuesday at 9:20 AM)</div>
+        <button class = "submitCourse" type = "button" onclick = "addCourse(this)">add</button>
+      </div>
+      <button type = "button" class = "done" onclick = "postFunction()">
+        Done!
+      </button>
+    </div>
+  </body>
+</html>

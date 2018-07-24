@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title></title>
+    <script>
+
+    </script>
+    <style>
+      * {
+        font-family: sans-serif;
+        box-sizing: border-box;
+      }
+      body {
+        padding: 0px;
+        margin: 0px;
+        background-color: #67ac5b;
+      }
+      /* .backdrop {
+        width: 100%;
+        height: 100%;
+        display: block;
+        position: absolute;
+
+      } */
+      /* #login {
+        width: 90%;
+        height: 50%;
+        display: block;
+        margin: auto;
+        background-color: white;
+        border-radius: 15px;
+        margin-top: 15%;
+      } */
+      #login {
+        display: block;
+        margin: auto;
+
+        width: 90%;
+        bottom: 100px;
+      }
+      .userInput {
+        display: block;
+        width: 100%;
+        border: 1px solid grey;
+        height: 40px;
+        outline: none;
+
+      }
+      #submit {
+        width: 100%;
+        height: 30px;
+        background-color: #00bdef;
+        font-size: 15px;
+        color: white;
+        margin-top: 10px;
+        outline: none;
+        border: none;
+      }
+      #submit:active {
+        background-color: #0093f1;
+      }
+      .error {
+        color: red;
+        width: 100%;
+        text-align: center;
+        font-size: 10px;
+        position: absolute;
+        top: 50px;
+
+      }
+
+
+
+    </style>
+  </head>
+  <body>
+    <div class = "backdrop">
+      <!-- <div id = "access">
+
+      </div> -->
+      <div class = "error">
+        <%=error%>
+      </div>
+      <div style = "width: 100%; height: 200px; display: block;">
+
+      </div>
+      <div id = "login">
+        <form id = "inputs" method = "POST" action = "/signup">
+          <label for "email" >Email: </label><input value = "<%=data[0]%>" type = "text" name = "email" placeholder = "Enter Email..." class = "userInput"/>
+          <br>
+          <label for "username">Username: </label><input value = "<%=data[1]%>" type = "text"  name = "username" placeholder = "Enter Username..." class = "userInput"/>
+          <br>
+          <label for "password">Password: </label><input type = "password" name = "password" placeholder = "Enter Password..."class = "userInput"/>
+          <br>
+          <label for "passwordConf">Confirm Password: </label><input type = "password" name = "passwordConf" placeholder = "Re-Enter Password..."class = "userInput"/>
+          <input type = "submit" id = "submit">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
