@@ -6,10 +6,17 @@ const Schema = mongoose.Schema;
 
 
 const UserSchema = new Schema({
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
-    unique: true,
-    required: true,
+
   },
   username: {
     type: String,
@@ -33,6 +40,10 @@ const UserSchema = new Schema({
   },
   texts: {
     type: Array
+  },
+  suggestions: {
+    type: Array,
+    default: [["", new Date()]]
   }
 });
 

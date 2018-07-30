@@ -1,113 +1,113 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <script src = "js/datalist-polyfill.min.js"></script>
+
     <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
 
     <script>
 
 
+
       var dataArray = [["MSC-10", "Science 10"],["MBI-11","Biology 11"],["MBI-12","Biology 12"],["MCH-11","Chemistry 11"],["MCH-12","Chemistry 12"], ["MPH-11", "Physics 11"], ["MPH-12","Physics 12"], ["MSCT-11","Horticulture Science 11"], ["MSS-10","Socials 10"], ["MESC-11","Human Geography 11"], ["MSS-11","Socials 11"], ["MHI-12","History 12"], ["MLAW-12","Law 12"], ["MIDS-2F","Law/Psyc 12"], ["YPSYC2A", "Psyc 12"], ["MPE-10", "PE 10"], ["MPE-11", "PE 11"], ["MPE-12", "PE 12"], ["MEN-12", "English 12"], ["MEN-11", "English 11"], ["MLIT-12", "English Literature 12"], ["MFMP-10", "Math 10"], ["MWPM-10", "Workplace Math 10"], ["MAWM-11", "A&W Math 11"], ["MFOM-11", "Foundation of Math 11"], ["MPREC-11", "Precalculus 11"], ["MAWM-12", "A&W Math 12"], ["MCALC-12", "Calculus 12"], ["MFOM-12", "Foundations of Math 12"], ["MPREC-12", "Precalculus 12"]];
 
-      var teacherList = ["Mr.Austin", "Mr.Fowler", "Mr.Fraser", "Mr.Landry", "Mme.Arthurson", "Mr.Bradshaw"];
 
-      var radioValue = null;
+      let scienceArray = [["Mr.Bradshaw", "MPH-11", "e"], ["Mr.Austin", "MPH-12", "a"], ["Mr.Austin", "MBI-11", "C"], "courseContentScience"];
+      let mathArray = ["courseContentMath"];
+      let socialsArray = [["Mr.Hughes", "MESC-11", "D"], "courseContentSocials"];
+      let englishArray = ["courseContentEnglish"];
+      let otherArray = ["courseContentOther"];
+      let financeArray = ["courseContentFinance"];
+      let coursesArray = [scienceArray, mathArray, socialsArray, englishArray, financeArray, otherArray];
+      function makeCourses() {
 
-      var courses = [];
-      function addCourse(input) {
-        var found = false;
-        var value = input.parentNode.children[0].value;
-        var teacher = input.parentNode.children[1].value;
-        var radio = radioValue.value;
 
-
-        for (var i = 0; i < dataArray.length; i++) {
-          if (dataArray[i][1] == value) {
-            found = true;
-            courses.push([dataArray[i][0], dataArray[i][1], teacher, radio]);
+        coursesArray.forEach(function(course) {
+          for (var i = 0; i < course.length-1; i++) {
+            let div = document.createElement("div");
+            div.setAttribute("class", "courseName " + course[i][2].toUpperCase());
+            div.setAttribute("id", (course[i][0].split(".")[0].toUpperCase() == "MR" ? "M_" : "F_") + course[i][0].split(".")[1].toUpperCase() + "_" + course[i][1] + "_" + course[i][2].toUpperCase());
+            div.setAttribute("onclick", "addCourse(this)");
+            for (var j = 0; j < dataArray.length; j++) {
+              if (dataArray[j][0] == course[i][1]) {
+                div.innerHTML = course[i][0] + "'s " + dataArray[j][1] + " (" + course[i][2].toUpperCase() + " block)";
+              }
+            }
+            document.getElementById(course[course.length-1]).appendChild(div);
           }
-        }
-        if(!found || !radio || !teacher) {
+        });
 
-        } else {
-          var displayNode = document.createElement("div");
-          displayNode.innerHTML = teacher + "'s " + value + " block: " + radio;
-          displayNode.className = "display";
-          document.getElementById("courses").appendChild(displayNode);
-          input.parentNode.children[0].value = "";
-          input.parentNode.children[1].value = "";
-          radioValue.parentNode.remove();
-          radioValue = null;
-        }
+
       }
 
 
 
-      function postFunction() {
-        var form = document.createElement("form");
-        form.setAttribute("method", "POST");
-        form.setAttribute("action", "/courses");
+      var teacherList = ["Mr.Austin", "Mr.Fowler", "Mr.Fraser", "Mr.Landry", "Ms.Arthurson", "Mr.Bradshaw"];
 
-        for (var i = 0; i < courses.length; i++) {
-          var hiddenField1 = document.createElement("input");
-          var hiddenField2 = document.createElement("input");
-          var hiddenField3 = document.createElement("input");
-          var hiddenField4 = document.createElement("input");
-          hiddenField1.setAttribute("type", "hidden");
-          hiddenField1.setAttribute("name", "coursesCode");
-          hiddenField1.setAttribute("value", courses[i][0]);
-          hiddenField2.setAttribute("type", "hidden");
-          hiddenField2.setAttribute("name", "coursesName");
-          hiddenField2.setAttribute("value", courses[i][1]);
-          hiddenField3.setAttribute("type", "hidden");
-          hiddenField3.setAttribute("name", "coursesTeacher");
-          hiddenField3.setAttribute("value", courses[i][2]);
-          hiddenField4.setAttribute("type", "hidden");
-          hiddenField4.setAttribute("name", "coursesBlock");
-          hiddenField4.setAttribute("value", courses[i][3]);
-          form.appendChild(hiddenField1);
-          form.appendChild(hiddenField2);
-          form.appendChild(hiddenField3);
-          form.appendChild(hiddenField4);
+      let codes = [];
+      let blocks = [];
+      let teachers = [];
+
+      function expandFunction(element) {
+        element.classList.toggle("displayed");
+      }
+
+      function addCourse(element) {
+        element.parentNode.parentNode.classList.toggle("displayed");
+        var parsedData = element.id.split("_");
+        codes.push(parsedData[2]);
+        blocks.push(parsedData[3]);
+        teachers.push(parsedData[1]);
+        var displayData = [];
+        displayData.push(parsedData[0] === "M" ? "Mr. " : "Ms. ");
+        displayData.push(parsedData[1].charAt(0).toUpperCase() + parsedData[1].toLowerCase().slice(1) + "'s ");
+        for (var i = 0; i < dataArray.length; i++) {
+          if (dataArray[i][0] == parsedData[2]) {
+            displayData.push(dataArray[i][1]);
+            break;
+          }
+        }
+        displayData.push(" block " + parsedData[3] + " course");
+        displayData = displayData.join("");
+        document.getElementById("displayCourses").innerHTML += displayData + "<br>";
+        var courseWithBlock = document.getElementsByClassName(parsedData[3]);
+        var length = courseWithBlock.length;
+
+        // console.log(courseWithBlock);
+        for (var i = 0; i < length; i++) {
+
+          courseWithBlock[0].remove();
+        }
+
+
+      }
+
+      function postFunction() {
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/courses";
+        for (var i = 0; i  < codes.length; i++) {
+          let input1 = document.createElement("input");
+          input1.type = "hidden";
+          input1.name = "coursesCode";
+          input1.value = codes[i];
+          let input2 = document.createElement("input");
+          input2.type = "hidden";
+          input2.name = "coursesBlock";
+          input2.value = blocks[i];
+          let input3 = document.createElement("input");
+          input3.type = "hidden";
+          input3.name = "coursesTeacher";
+          input3.value = teachers[i];
+          form.appendChild(input1);
+          form.appendChild(input2);
+          form.appendChild(input3);
         }
         document.body.appendChild(form);
         form.submit();
       }
-
-      function radioFunction(value) {
-        radioValue = value;
-      }
-
-
-
-
       window.onload = function() {
-        var datalist = document.createElement("datalist");
-        datalist.id = "coursesList";
-        for (var i = 0; i < dataArray.length; i++) {
-          var child = document.createElement("option");
-          child.value = dataArray[i][1];
-          child.innerHTML = dataArray[i][1];
-          datalist.appendChild(child);
-        }
-        document.getElementById("courseHolder").appendChild(datalist);
-
-        var teacherDatalist = document.createElement("datalist");
-        teacherDatalist.id = "teacherList";
-        for (var i = 0; i < teacherList.length; i++) {
-          var child = document.createElement("option");
-          child.value = teacherList[i];
-          child.innerHTML = teacherList[i];
-          teacherDatalist.appendChild(child);
-        }
-        document.getElementById("courseHolder").appendChild(teacherDatalist);
-
-
-
-
+        makeCourses();
       }
-
-
 
 
 
@@ -115,6 +115,7 @@
     <style>
       * {
         font-family: sans-serif;
+        box-sizing: border-box;
       }
       body {
         padding: 0px;
@@ -125,36 +126,13 @@
         color: white;
       }
       .courseHolder {
-        width: 95%;
+        width: 100%;
         height: 100%;
         display: block;
         margin: auto;
         margin-top: 50px;
       }
-      .courseHolder .addCourse {
-        height: 35px;
-        width: 80%;
-        font-size: 19px;
-        outline: none;
-        display: block;
-        margin: auto;
-        border-bottom: 2px solid black;
-        border-top:0px;
-        border-left:0px;
-        border-right:0px;
-      }
-      .courseHolder .submitCourse {
-        height: 35px;
-        width: 80%;
-        background-color: #26a4ff;
-        display: block;
-        margin: auto;
-        margin-top: 15px;
-        border-radius: 6px;
-        color: white;
-        font-size: 20px;
-        outline: none;
-      }
+
       .display {
         padding: 10px;
         font-size: 15px;
@@ -168,14 +146,10 @@
         background-color: #26a4ff;
         border-radius: 9px;
         outline: none;
-        position: absolute;
+        position: fixed;
         bottom: 0px;
       }
-      input[type="radio"] {
-        width: 30px;
-        height: 30px;
-        vertical-align: middle;
-      }
+
       .radioText {
         color: white;
         display: block;
@@ -205,19 +179,58 @@
 
       }
 
-      #coursesList .polyfilling {
-        position: fixed;
-        top: 85px;
-        left: 11%;
-      }
-      #teacherList .polyfilling {
-        position: fixed;
-        top: 120px;
-        left: 11%;
-      }
-      .polyfilling {
-        width: 80px;
+      .course {
+        padding: 5%;
+        background-color: white;
+        border: 2px solid black;
+        text-align: center;
+        font-size: 18px;
+        border-radius: 5px;
 
+      }
+      .courseContent {
+        display: none;
+        font-size: 13px;
+        text-align: center;
+
+
+      }
+      .displayed .courseContent {
+        display: block;
+      }
+      .courseName {
+        width: 100%;
+        padding: 7px;
+        border: 1px solid black;
+        font-size: 14px;
+      }
+      .courseHolder {
+        overflow: auto;
+      }
+      .displayCourses {
+        font-size: 15px;
+      }
+      @media screen and (min-width: 768px) {
+        .courseHolder {
+          display: flex;
+        }
+        .course {
+          flex-grow: 1;
+          padding: 0px;
+          padding-top: 5%;
+          padding-bottom: 5%;
+
+        }
+        .courseContent {
+
+
+        }
+        .courseName {
+
+          width: 80%;
+          display: block;
+          margin: auto;
+        }
       }
 
 
@@ -228,17 +241,115 @@
     <div id = "courses" class = "courses">
       <button type = "button" class = "later"><a href = "/">later</a></button>
       <div class = "courseHolder" id = "courseHolder">
+        <div class = "course" id = "science" onclick = "expandFunction(this)">
+          Science
+          <div class = "courseContent" id = "courseContentScience">
+            Click on a class to select it as one of yours<br>
+            Click on the header to close
+            <!-- <div class = "courseName E" id = "M_BRADSHAW_MPH-11_E" onclick = "addCourse(this)">
+              Mr. Bradshaw's Physics 11 (e block)
+            </div>
+            <div class = "courseName C" id = "M_AUSTIN_MPH-11_C" onclick = "addCourse(this)">
+              Mr. Austin's Physics 11 (c block)
+            </div>
+            <div class = "courseName A" id = "M_AUSTIN_MPH-12_A" onclick = "addCourse(this)">
+              Mr. Austin's Physics 12 (A block)
+            </div>
+            <div class = "courseName E" id = "M_FRASER_MCH-11_E" onclick = "addCourse(this)">
+              Mr. Fraser's Chemistry 11 (e block)
+            </div>
+            <div class = "courseName E" id = "M_FRASER_MCH-12_E" onclick = "addCourse(this)">
+              Mr. Fraser's Chemistry 12 (e block)
+            </div>
+            <div class = "courseName E" id = "F_SEILER_MBI-11_A" onclick = "addCourse(this)">
+              Ms. Seiler's Biology 11 (a block)
+            </div>
+            <div class = "courseName A" id = "F_SEILER_MBI-12_A" onclick = "addCourse(this)">
+              Ms. Seiler's Biology 12 (a block)
+            </div>
+            <div class = "courseName C" id = "M_AUSTIN_MBI-11_C" onclick = "addCourse(this)">
+              Mr. Austin's Biology 11 (c block)
+            </div>
+            <div class = "courseName E" id = "M_AUSTIN_MBI-12_D" onclick = "addCourse(this)">
+              Mr. Austin's Biology 12 (d block)
+            </div>
+            <div class = "courseName E" id = "M_---_MSC-10_E" onclick = "addCourse(this)">
+              Mr. ____'s Science 10 (e block)
+            </div>
+            <div class = "courseName E" id = "M_---_MSC-10_E" onclick = "addCourse(this)">
+              Mr. ____'s Science 9 (a block)
+            </div> -->
 
-        <input list = "coursesList" class = "addCourse" type = "text" placeholder = "Enter a course..." name = "course[]" id = "coursePicker" />
-        <input list = "teacherList" type = "text" class = "addCourse" placeholder = "enter your teacher..." name = "teacher" id = "teacherPicker" />
 
-        <div id = "header">Enter the class Block: </div>
-        <div class = "radioText"><input type="radio" name="block" value="A"  onclick = "radioFunction(this)">A (first class Monday at 9:20 AM)</div>
-        <div class = "radioText"><input type="radio" name="block" value="B"  onclick = "radioFunction(this)">B (first class Monday at 11:00 AM)</div>
-        <div class = "radioText"><input type="radio" name="block" value="C"  onclick = "radioFunction(this)">C (first class Monday at 12:45 PM)</div>
-        <div class = "radioText"><input type="radio" name="block" value="D"  onclick = "radioFunction(this)">D (first class Monday at 2:16 PM)</div>
-        <div class = "radioText"><input type="radio" name="block" value="E"  onclick = "radioFunction(this)">E (first class Tuesday at 9:20 AM)</div>
-        <button class = "submitCourse" type = "button" onclick = "addCourse(this)">add</button>
+
+          </div>
+        </div>
+        <div class = "course" id = "math" onclick = "expandFunction(this)">
+          math
+          <div class = "courseContent" id = "courseContentMath">
+            Click on a class to select it as one of yours<br>
+            Click on the header to close
+            <!-- <div class = "courseName E" id = "M_BRADSHAW_MCALC-12_E" onclick = "addCourse(this)">
+              Mr. Bradshaw's Calculus 12 (b block)
+            </div>
+            <div class = "courseName D" id = "M_BRADSHAW_MPREC-12_D" onclick = "addCourse(this)">
+              Mr. Bradshaw's Pre-Calculus 12 (d block)
+            </div>
+            <div class = "courseName E" id = "M_BRADSHAW_MPREC-11_E" onclick = "addCourse(this)">
+              Mr. Bradshaw's Pre-Calculus 11 (d block)
+            </div>
+            <div class = "courseName E" id = "M_---_MFMP-10_E" onclick = "addCourse(this)">
+              Mr. ___'s FMP 10 (e block)
+            </div>
+            <div class = "courseName E" id = "M_---_MWPM-10_E" onclick = "addCourse(this)">
+              Mr. ___'s Workplace Math 10 (a block)
+            </div>
+            <div class = "courseName E" id = "M_---_MAWM-11_E" onclick = "addCourse(this)">
+              Mr. ___'s A&W Math 11 (b block)
+            </div>
+            <div class = "courseName E" id = "M_---_MWPM-10_E" onclick = "addCourse(this)">
+              Mr. ___'s A&W Math 12 (c block)
+            </div> -->
+          </div>
+        </div>
+        <div class = "course" id = "socials" onclick = "expandFunction(this)">
+          Socials
+          <div class = "courseContent" id = "courseContentSocials">
+            Click on a class to select it as one of yours<br>
+            Click on the header to close
+            <!-- <div class = "courseName D" id = "M_HUGHES_MESC-11_D" onclick = "addCourse(this)">
+              Mr. Hughes's Human Geography 11 (d block)
+            </div> -->
+          </div>
+        </div>
+        <div class = "course" id = "english" onclick = "expandFunction(this)">
+          English
+          <div class = "courseContent" id = "courseContentEnglish">
+            Click on a class to select it as one of yours<br>
+            Click on the header to close
+
+          </div>
+        </div>
+        <div class = "course" id = "Finance" onclick = "expandFunction(this)">
+          Finance
+          <div class = "courseContent" id = "courseContentFinance">
+            Click on a class to select it as one of yours<br>
+            Click on the header to close
+
+          </div>
+        </div>
+        <div class = "course" id = "other" onclick = "expandFunction(this)">
+          Other
+          <div class = "courseContent" id = "courseContentOther">
+            Click on a class to select it as one of yours<br>
+            Click on the header to close
+
+          </div>
+        </div>
+
+      </div>
+      <div class = "displayCourses" id = "displayCourses" style = "width: 100%; text-align: center; margin-top: 50px">
+
       </div>
       <button type = "button" class = "done" onclick = "postFunction()">
         Done!

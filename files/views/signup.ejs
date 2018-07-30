@@ -37,7 +37,12 @@
         margin: auto;
 
         width: 90%;
-        bottom: 100px;
+
+      }
+      #inputs {
+        position: absolute;
+        top: 10px;
+        width: 90%;
       }
       .userInput {
         display: block;
@@ -69,6 +74,45 @@
         top: 50px;
 
       }
+      .login {
+        position: fixed;
+        bottom: 45px;
+        width: 50%;
+        left: 25%;
+        text-align: center;
+        font-size: 15px;
+      }
+
+      @media screen and (max-width: 320px) {
+        .login {
+          bottom: 15px;
+        }
+      }
+      @media screen and (min-width: 768px) {
+        .inputLabel {
+          display: block;
+          width: 400px;
+          margin: auto;
+
+        }
+        #submit {
+          width: 400px;
+          display: block;
+          margin: auto;
+        }
+        #login {
+
+        }
+        #inputs {
+          display: block;
+          position: relative;
+          border: 1px solid black;
+          width: 500px;
+          margin: auto;
+          margin-top: 0;
+
+        }
+      }
 
 
 
@@ -87,15 +131,18 @@
       </div>
       <div id = "login">
         <form id = "inputs" method = "POST" action = "/signup">
-          <label for "email" >Email: </label><input value = "<%=data[0]%>" type = "text" name = "email" placeholder = "Enter Email..." class = "userInput"/>
+          <div class = "inputLabel" style = "margin-top: 50px"><label for "firstName" >First Name: </label><input value = "<%=data[1]%>" type = "text" name = "firstName" placeholder = "Enter First Name..." class = "userInput" required/></div>
           <br>
-          <label for "username">Username: </label><input value = "<%=data[1]%>" type = "text"  name = "username" placeholder = "Enter Username..." class = "userInput"/>
+          <div class = "inputLabel"><label for "lastName" >Last Name: </label><input value = "<%=data[2]%>" type = "text" name = "lastName" placeholder = "Enter lastName..." class = "userInput" required/></div>
           <br>
-          <label for "password">Password: </label><input type = "password" name = "password" placeholder = "Enter Password..."class = "userInput"/>
+          <div class = "inputLabel"><label for "email" >Username: </label><input value = "<%=data[0]%>" type = "text" name = "username" placeholder = "Enter Username..." class = "userInput" required/></div>
           <br>
-          <label for "passwordConf">Confirm Password: </label><input type = "password" name = "passwordConf" placeholder = "Re-Enter Password..."class = "userInput"/>
-          <input type = "submit" id = "submit">
+          <div class = "inputLabel"><label for "password">Password: </label><input type = "password" name = "password" placeholder = "Enter Password..."class = "userInput" required/></div>
+          <br>
+          <div class = "inputLabel"><label for "passwordConf">Confirm Password: </label><input type = "password" name = "passwordConf" placeholder = "Re-Enter Password..."class = "userInput" required/></div>
+          <input type = "submit" id = "submit" style = "margin-bottom: 50px">
         </form>
+        <center><div class = "login"><i><h6>already have an account? <a href = "/login">login</a></h6></i></div></center>
       </div>
     </div>
   </body>

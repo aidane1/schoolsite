@@ -5,8 +5,8 @@
     <title></title>
     <script>
       function displayFunction(id, name) {
-        document.getElementById("coursesDisplay").style.display = "none";
-        document.getElementById("submit").style.display = "block";
+        document.getElementById("coursesDisplay").classList.toggle("noDisplay");
+        document.getElementById("submit").classList.toggle("blockDisplay");
         document.getElementById("header").innerHTML = name;
         document.getElementById("courseID").value = id;
       }
@@ -129,7 +129,7 @@
         height: 30px;
         display: block;
         margin: auto;
-        margin-top: 30%;
+        margin-top: 15px;
         color: white;
       }
       .header {
@@ -153,7 +153,7 @@
       #submitTypes {
         width: 100%;
         margin: auto;
-        margin-top: 35px;
+        margin-top: 5%;
       }
       .submitButton {
         width: 45%;
@@ -163,7 +163,7 @@
         display: block;
         position: absolute;
         left: 27.5%;
-        bottom: 45px;
+        bottom: 10px;
         outline: none;
       }
       .textareaLabel {
@@ -185,7 +185,7 @@
         display: none;
       }
       .backButton {
-        position: absolute;
+        position: fixed;
         width: 60px;
         height: 30px;
         background-color: red;
@@ -197,6 +197,56 @@
       }
       .backButton a {
         text-decoration: none;
+      }
+      .noDisplay {
+        display: none;
+      }
+      .blockDisplay {
+        display: block;
+      }
+      @media screen and (max-width: 320px) {
+
+      }
+      @media screen and (min-width: 768px) {
+        .submit {
+
+
+        }
+        .noDisplay {
+          display: flex;
+        }
+        .blockDisplay {
+          position: fixed;
+          display: block;
+          top: 0px;
+          width: 50%;
+          right: 0;
+        }
+        .text {
+
+          margin-top: 50px;
+        }
+        .notes {
+          height: 500px;
+
+        }
+        .submitButton {
+          position: absolute;
+          bottom: 15px;
+
+        }
+        .coursesDisplay {
+
+          width: 500px;
+
+        }
+        .option {
+
+        }
+        .course {
+          width: 300px;
+          height: 100px;
+        }
       }
     </style>
   </head>
@@ -220,7 +270,7 @@
         <button class = "option" onclick = "submitType(2)">Assignment</button>
       </div>
       <div class = "text">notes: </text>
-      <textarea class = "notes" name = "notes">
+      <textarea class = "notes" name = "notes" maxlength="256">
 
       </textarea>
       <input type = "submit" class = "submitButton">

@@ -31,37 +31,7 @@ body {
   margin: 0;
   padding: 0;
 }
-nav {
-  position: absolute;
-  bottom: 0;
-}
 
-
-nav .holder {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-}
-nav a {
-  text-decoration: none;
-  text-align: center;
-  color: #fff;
-  display: block;
-  padding: 20px;
-  font-size: 20px;
-}
-
-nav a:active {
-  /* background-color: #555; */
-  background: linear-gradient(#444, #333);
-}
-nav .item {
-  min-width: 320px;
-  background: linear-gradient(#333, #444);
-  flex: 1 1 0;
-}
 
 
 nav a:hover {
@@ -112,8 +82,8 @@ nav a:hover {
   display: block;
   margin: auto;
   border-radius: 8px;
-  margin-top: 10px;
-  padding: 5px;
+  margin-top: 5px;
+  padding: 1px;
   color : white;
 }
 .header2 {
@@ -146,11 +116,14 @@ nav a:hover {
   .openRooms {
     /* background-color: red; */
     list-style-type: none;
+    width: 100%;
+    display:block;
+    margin-top: 25px;
   }
   .openRooms li {
     /* text-align: center; */
     /* width: 100%; */
-    height: 50px;
+
     /* border: 5px solid black; */
 
   }
@@ -199,6 +172,7 @@ nav a:hover {
     position: absolute;
     height: 40px;
     display: block;
+
   }
   .classHolder ul {
     list-style-type: none;
@@ -228,7 +202,8 @@ nav a:hover {
   }
   .resourceBox {
     width: 100%;
-    height: 500px;
+    height: 60%;
+
     background-color: white;
     border-radius: 5px;
     position: relative;
@@ -240,6 +215,7 @@ nav a:hover {
     width: 80%;
     height: 7%;
     background-color: #26a4ff;
+    cursor: pointer;
     display: block;
     margin: auto;
     font-size: 15px;
@@ -351,7 +327,7 @@ nav a:hover {
   .shownCalendar tr td {
     border: 2px solid black;
     width: 14.2857%;
-    height: 65px;
+    height: 60px;
   }
   .shownCalendar tr th {
     background-color: #fc4f3c;
@@ -363,6 +339,146 @@ nav a:hover {
     text-align: center;
     font-size: 35px;
     margin-bottom: 5px;
+  }
+  .event {
+    position: absolute;
+    color: blue;
+  }
+
+  .hover {
+    background:#F8F8F8;
+    border: 5px solid #DFDFDF;
+    color: #717171;
+    font-size: 13px;
+    height: 60px;
+    letter-spacing: 1px;
+    line-height: 20px;
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    left:-60px;
+    display:none;
+    width: 150px;
+
+  }
+  .hover::before{
+      content:'';
+      position:absolute;
+      bottom:-10px;
+      width:10px;
+      height:10px;
+      border-bottom:5px solid #dfdfdf;
+      border-right:5px solid #dfdfdf;
+      background:#f8f8f8;
+      left:50%;
+      margin-left:-10px;
+      -moz-transform:rotate(45deg);
+      -webkit-transform:rotate(45deg);
+      transform:rotate(45deg);
+      z-index:0;
+  }
+  .left {
+    left: -10px;
+  }
+  .left::before {
+    left : 10%;
+  }
+  .right {
+    left: -110px;
+  }
+  .right::before {
+    left: 90%;
+  }
+  .event{
+
+      float:left;
+      position:relative;
+      cursor:pointer;
+  }
+
+  .event:hover .hover{
+      display:block;
+  }
+  .menuIcon {
+    width: 35px;
+    height: 40px;
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    /* background-color: black; */
+
+    border-radius: 3px;
+    z-index: 16;
+  }
+  .line1, .line2, .line3 {
+    width: 28px;
+    height: 2px;
+    background-color: white;
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+    border-radius: 2px;
+    transition: 0.4s;
+  }
+  .change .line1 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 0px);
+    transform: rotate(-45deg) translate(-9px, 0px);
+  }
+  .change .line2 {
+    opacity: 0;
+  }
+  .change .line3 {
+    -webkit-transform: rotate(45deg) translate(-10px, 0px);
+    transform: rotate(45deg) translate(-10px, 0px);
+  }
+
+
+  nav {
+    position: fixed;
+    top:-250px;
+    width: 100%;
+    z-index: 15;
+    transition: 0.8s;
+  }
+
+
+  .holder {
+    list-style-type: none;
+    padding: 0;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  nav a {
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    display: block;
+    padding: 0px;
+    font-size: 20px;
+    transition: padding 0.8s;
+
+  }
+
+  nav a:active {
+    /* background-color: #555; */
+    background: linear-gradient(#444, #333);
+  }
+  nav .item {
+    width: 100%;
+
+
+    background: linear-gradient(#333, #444);
+  }
+
+  .expanded .item {
+
+  }
+  .expanded a {
+    padding: 15px;
+
+  }
+  .expand {
+    top: -20px;
   }
 
 
@@ -380,9 +496,7 @@ nav a:hover {
       height: 8%;
       margin-top: 5px;
     }
-    .resourceBox {
-      height: 400px;
-    }
+
     .courses {
       font-size: 13px;
     }
@@ -392,12 +506,15 @@ nav a:hover {
     .header2 {
       font-size: 15px;
     }
+
+    .block {
+      font-size: 70px;
+    }
+    .shownCalendar tr td {
+      height: 50px;
+      font-size: 14px;
+    }
+    .calendar {
+      margin-top: 10px;
+    }
   }
-
-
-
-
-/* for tablets */
-@media screen and (max-width: 768px) {
-
-}

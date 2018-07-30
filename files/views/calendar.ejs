@@ -4,24 +4,9 @@
     <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
     <title></title>
     <script>
-      function eventFunction(event, node, extreme) {
-        node.childNodes[1].className = "";
-        if (extreme === "right") {
-          node.childNodes[1].className = "hover right";
-        } else if (extreme === "left") {
-          node.childNodes[1].className = "hover left";
-        } else {
-          node.childNodes[1].className = "hover";
-        }
-        node.childNodes[1].innerHTML = "";
-        event = event.split(",");
-        node.childNodes[1].style.height = (event.length*55).toString() + "px";
-        node.childNodes[1].style.top = ((-20)-event.length*55).toString() + "px";
-        for (var i = 0; i < event.length-1; i++) {
-            node.childNodes[1].innerHTML = event[i] + "<hr>" + node.childNodes[1].innerHTML;
-        }
-        node.childNodes[1].innerHTML = node.childNodes[1].innerHTML + event[event.length-1];
-
+      function testFunction(element) {
+        console.log(element.childNodes[1]);
+        element.childNodes[1].classList.toggle("displayed");
       }
     </script>
     <style>
@@ -96,7 +81,8 @@
         text-align: center;
         text-transform: uppercase;
         left:-60px;
-        display:none;
+        /* display:block; */
+        display: none;
         width: 150px;
 
       }
@@ -135,8 +121,30 @@
           cursor:pointer;
       }
 
-      .event:hover .hover{
-          display:block;
+      .displayed {
+        display: block;
+      }
+      @media screen and (max-width: 320px) {
+
+        .shownCalendar tr td {
+          height: 40px;
+          font-size: 14px;
+        }
+      }
+      @media screen and (min-width: 768px) {
+        .shownCalendar {
+
+
+
+        }
+        .calendar {
+          display: block;
+          width: 500px;
+          margin: auto;
+          margin-top: 50px;
+          border: 1px solid black;
+          padding: 15px;
+        }
       }
     </style>
   </head>
@@ -171,11 +179,11 @@
                   <br>
                   <%if (calendar[i][j-calendar[i][0][2]][0].length != 0) { %>
                     <% if (calendar[i][j-calendar[i][0][2]][2] === 0) { %>
-                      <div class = "event">event<span class = "hover left" style = "top: <%=-20-calendar[i][j-calendar[i][0][2]][0].length*55%>px; height: <%=calendar[i][j-calendar[i][0][2]][0].length*55%>px">
+                      <div class = "event" onclick = "testFunction(this)">event<span class = "hover left" style = "top: <%=-20-calendar[i][j-calendar[i][0][2]][0].length*55%>px; height: <%=calendar[i][j-calendar[i][0][2]][0].length*55%>px">
                     <% } else if (calendar[i][j-calendar[i][0][2]][2] === 6) { %>
-                      <div class = "event">event<span class = "hover right" style = "top: <%=-20-calendar[i][j-calendar[i][0][2]][0].length*55%>px; height: <%=calendar[i][j-calendar[i][0][2]][0].length*55%>px">
+                      <div class = "event" onclick="testFunction(this)">event<span class = "hover right" style = "top: <%=-20-calendar[i][j-calendar[i][0][2]][0].length*55%>px; height: <%=calendar[i][j-calendar[i][0][2]][0].length*55%>px">
                     <% } else { %>
-                      <div class = "event">event<span class = "hover" style = "top: <%=-20-calendar[i][j-calendar[i][0][2]][0].length*55%>px; height: <%=calendar[i][j-calendar[i][0][2]][0].length*55%>px">
+                      <div class = "event" onclick="testFunction(this)">event<span class = "hover" style = "top: <%=-20-calendar[i][j-calendar[i][0][2]][0].length*55%>px; height: <%=calendar[i][j-calendar[i][0][2]][0].length*55%>px">
                     <% } %>
                   <% } %>
 

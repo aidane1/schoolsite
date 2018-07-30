@@ -11,5 +11,5 @@ btn.addEventListener("click", function() {
 });
 
 socket.on("chat", function(data) {
-  output.innerHTML += '<p><strong>' + data.username + "</strong>: " + data.message + "</p>";
+  output.innerHTML += '<div class = "messageHolder"<p><strong>' + data.username + "</strong>: " + data.message + "</p><div class = 'name'>" + data.firstName + " " + data.lastName + "</div></div>";
 })

@@ -45,6 +45,11 @@ function getDays(month) {
   }
 }
 
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
 
 
 var mongoose = require("mongoose");
@@ -69,6 +74,19 @@ let cookieParser = require("cookie-parser");
 
 var Texts = require("../models/textchar.js");
 
+var Resources = require("../models/resourcechar.js");
+
+let nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "pvsstudents@gmail.com",
+    pass: "AidanEglin2002pvss"
+  }
+})
+
+
 
 
 
@@ -89,6 +107,7 @@ mongoose.connection.once("open", function() {
 
 // Events.create({year : 2018, month : 8, day : 3, info : "First Day Back !"});
 
+// Resources.create({url : "https://www.khanacademy.org/science/biology", class : "MBI-11", type: "VIDEO", description: "Khan Academy Video"});
 
 // sets up middleware
 var urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -138,8 +157,19 @@ app.post("/add", urlencodedParser, function(req, res) {
 
 //for sending today's course data;
 function blockToTime(day) {
-  let schedule = [[["A", 2], ["B", 3], ["C",2], ["D", 3]],[["B", 2], ["C", 3], ["D", 2], ["E", 3]],[["C", 2], ["D", 3], ["E", 2], ["A", 3]],[["D", 2], ["E", 3], ["A", 2], ["B", 3]],[["E", 2], ["A",3], ["B",2], ["C",3]]];
+  // let schedule = [[["A", 2], ["B", 3], ["C",2], ["D", 3]],[["B", 2], ["C", 3], ["D", 2], ["E", 3]],[["C", 2], ["D", 3], ["E", 2], ["A", 3]],[["D", 2], ["E", 3], ["A", 2], ["B", 3]],[["E", 2], ["A",3], ["B",2], ["C",3]]];
+  let schedule = [["A", "B", "C", "D", "E"], ["E", "D", "B", "C", "A"], ["D", "A", "C", "B", "E"], ["B", "C", "E", "A", "D"], ["D", "B", "A", "E", "C"]];
 
+  if (day === -1 || day === 5) {
+    return false;
+  }
+  return schedule[day];
+}
+
+
+//gives today's LC's
+function lcSchedule(day) {
+  let schedule = [["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"], ["Mr. Austin, room 31", "Mr. Fraser, room 28", "Open foods, room 17", "Mr. foxx, room 30", "Mme. Arthurson, room 41", "Open shop, room 50"]];
   if (day === -1 || day === 5) {
     return false;
   }
@@ -148,13 +178,11 @@ function blockToTime(day) {
 // handles get requests for / (home)
 app.get("/", function(req, res) {
 
-  console.log(req.cookies);
   let currentDate = new Date();
   let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   if (req.session.userId) {
     User.findOne({_id : req.session.userId}, function(err, user) {
       if (!user) {
-        req.session.reset();
         res.redirect("/login");
       } else {
         var courseCodes = [];
@@ -167,13 +195,13 @@ app.get("/", function(req, res) {
             homeworkList.push([homeworkCourse.course, homeworkCourse.homework]);
           });
           // var todaysBlocks = blockToTime((currentDate).getDay() -1);
-          var todaysBlocks = blockToTime(3);
+          var todaysBlocks = blockToTime(0);
           var todaysOrderedClasses = [];
+
           for (var i = 0; i < todaysBlocks.length; i++) {
             var foundBlock = false;
             for (var j = 0; j < user.courses.length; j++) {
-
-              if (user.courses[j].block === todaysBlocks[i][0]) {
+              if (user.courses[j].block === todaysBlocks[i]) {
 
                 todaysOrderedClasses.push(user.courses[j].course);
                 foundBlock = true;
@@ -183,6 +211,7 @@ app.get("/", function(req, res) {
               todaysOrderedClasses.push("LC's");
             }
           }
+
           Events.find({month : (currentDate).getMonth(), year : (currentDate).getFullYear()}, function(err, monthEvent) {
             let daysArray = [];
             let dayEvents = [];
@@ -207,8 +236,27 @@ app.get("/", function(req, res) {
               daysArray.push(todayArray);
 
             }
-            // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime((currentDate).getDay() -1)});
-            res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()]});
+            var courseCodes = [];
+            for (var i = 0; i < user.courses.length; i++) {
+              courseCodes.push(user.courses[i].code);
+            }
+            Resources.find({class : courseCodes}, function(err, resource) {
+              // res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime((currentDate).getDay() -1)});
+
+              user.courses.forEach(function(userCourse) {
+                userCourse.resource = [];
+                for (var i = 0; i < resource.length; i++) {
+                  if (userCourse.code === resource[i].class) {
+
+                    userCourse.resource.push(resource[i]);
+                  }
+                }
+
+              });
+
+              res.render("index",  {courses : user.courses, homework : homeworkList, todaysCourses : blockToTime(3), blockOrder : todaysOrderedClasses, calendar : daysArray, month: months[currentDate.getMonth()], lcSchedule : lcSchedule(3)});
+            });
+
           });
         });
       }
@@ -222,10 +270,9 @@ app.get("/", function(req, res) {
 app.post("/submit", urlencodedParser, function(req, res) {
   var tampered = false;
   for (var key in req.body) {
-    console.log(key);
     if (key != "courseID" && key != "page" && key != "questions" && key != "assignment" && key != "notes" && key != "submittedBy" && key != "confirmed") {
       tampered = true;
-      // console.log(req.body)
+
     }
   }
   if (req.session.userId && !tampered) {
@@ -233,7 +280,7 @@ app.post("/submit", urlencodedParser, function(req, res) {
         req.body.date = new Date;
         var newWork = course.homework;
         newWork.push(req.body);
-        console.log(newWork);
+
         Course.findOneAndUpdate({_id : req.body.courseID}, {homework : newWork}).then(function() {
 
         });
@@ -307,7 +354,7 @@ app.get("/courses", function(req, res) {
 
 //handles get requests for signup
 app.get("/signup", function(req, res) {
-  res.render("signup", {error : "", data : ["", ""]});
+  res.render("signup", {error : "", data : ["", "", "", ""]});
 });
 
 
@@ -327,9 +374,9 @@ app.get("/login", function(req, res) {
 app.post("/courses", urlencodedParser, function(req, res) {
 
 
-
   if (req.session.userId) {
     Course.find({ code: req.body.coursesCode, block: req.body.coursesBlock }, (err, theCourse) => {
+
       let badCourses = [];
       let goodCourses = [];
       if (typeof req.body.coursesCode === "string") {
@@ -370,7 +417,7 @@ app.post("/courses", urlencodedParser, function(req, res) {
 
         }
       }
-      console.log(badCourses);
+
       User.findOneAndUpdate({_id : req.session.userId}, {courses : theCourse}).then(function() {
 
       });
@@ -379,7 +426,7 @@ app.post("/courses", urlencodedParser, function(req, res) {
 
     res.redirect("/");
   } else {
-    res.redirect("/signup");
+    res.redirect("/login");
   }
 
 
@@ -402,23 +449,31 @@ app.post("/login", urlencodedParser, async (req, res, next) => {
 });
 
 
+//handles logout
+app.get("/logout", function(req, res) {
+  req.session.destroy();
+  res.redirect("/login");
+});
+
 
 
 // handles post requests for signup
 app.post("/signup", urlencodedParser, function(req, res) {
   if (req.body.password != req.body.passwordConf) {
-    res.render("signup", {error : "Error : passwords do not match", data : [req.body.email, req.body.username]});
-
-  }  else if (req.body.email && req.body.username && req.body.password && (req.body.password === req.body.passwordConf)) {
+    res.render("signup", {error : "Error : passwords do not match", data : [req.body.email, req.body.firstName, req.body.lastName]});
+  } else if (req.body.username && req.body.firstName && req.body.lastName && req.body.password && (req.body.password === req.body.passwordConf)) {
     var userData = {
-      email: req.body.email,
+      firstName: req.body.firstName.charAt(0).toUpperCase() + req.body.firstName.slice(1),
+      lastName: req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1),
       username: req.body.username,
       password: req.body.password,
+      email: req.body.username
     }
     try {
       User.create(userData,function(error, user) {
         if (error) {
-          res.send(error);
+          console.log(error);
+          res.render("signup", {error : "Username is already being used. Please try again.", data : ["", req.body.firstName, req.body.lastName]});
         } else {
           req.session.userId = user._id;
           res.cookie("sessionID", req.session.userId);
@@ -431,15 +486,63 @@ app.post("/signup", urlencodedParser, function(req, res) {
 
 
   } else {
-    console.log("error");
+    res.redirect("/signup");
   }
 });
 
+//handles get requests for /suggestions
+app.get("/suggestions", function(req, res) {
+  if (req.session.userId) {
+    res.sendFile(__dirname + "/public/html/suggestions.html");
+  } else {
+    res.redirect("/login");
+  }
+});
+
+
+//handles post requests for /suggestions
+app.post("/suggestions", urlencodedParser, function(req, res) {
+
+  if (req.session.userId) {
+    User.findOne({_id : req.session.userId}, function(err, user) {
+      if (((new Date()).getTime() - user.suggestions[user.suggestions.length-1][1].getTime())/1000 < 900) {
+        
+        res.redirect("/");
+      } else {
+
+        let mailOptions = {
+          from: "pvsstudents@gmail.com",
+          to: "aidaneglin@gmail.com",
+          subject: "user suggestion",
+          text: req.body.body + "\n\n\nsubmitted by: " + user.firstName + " " + user.lastName + " (" + user.username + ")"
+        }
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+              console.log(error)
+            res.redirect("/")
+          } else {
+            let suggestions = user.suggestions;
+            suggestions.push([req.body.body, new Date()]);
+            User.findOneAndUpdate({_id : req.session.userId}, {suggestions: suggestions}).then(function() {
+              res.redirect("/");
+            });
+          }
+        });
+      }
+    });
+
+
+
+  } else {
+    res.redirect("/login");
+  }
+});
 
 //socket setup
 app.get("/chatroom", function(req,res) {
   if (req.session.userId) {
     res.sendFile(__dirname + "/public/html/chatroom.html");
+
   } else {
     res.redirect("/login");
   }
@@ -449,23 +552,26 @@ let io = socket(server);
 
 io.on("connection", function(socket) {
 
+
   socket.on("chat", function(data) {
+
     let id = mongoose.Types.ObjectId(data.id);
     User.findOne({_id : id}, function(err, user) {
       if (err) {
 
       } else {
+
         let userTextArray = user.texts;
         userTextArray.push(data.message);
         Texts.create({date : new Date(), body: data.message, submittedBy : user.username}, function(error, text) {
           if (error) {
 
           } else {
-            
+
           }
         });
         User.findOneAndUpdate({_id : user._id}, {texts : userTextArray}).then(function() {
-          data = {message : data.message, username : user.username};
+          data = {message : data.message, username : user.username, firstName: user.firstName, lastName:user.lastName};
           io.emit("chat", data);
         });
       }

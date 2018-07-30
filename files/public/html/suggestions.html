@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title></title>
+    <script>
+
+    </script>
+    <style>
+      textarea {
+        width: 95%;
+        height: 200px;
+        border: 2px solid black;
+        display: block;
+        margin: auto;
+        outline: none;
+        margin-top: 50px;
+      }
+      body {
+        margin: 0;
+        background-color: #67ac5b;
+        font-family: sans-serif;
+      }
+      .submit {
+        position: absolute;
+        bottom: 50px;
+        width: 80%;
+        background-color: #26a4ff;
+        left: 10%;
+        height: 60px;
+        border-radius: 10px;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <center>We appreciate your suggestions!</center>
+    <br>
+    <form method = "POST" action = "/suggestions">
+      <textarea name = "body" maxlength="512">
+
+      </textarea>
+      <input type = "submit" class = 'submit'>
+    </form>
+
+
+ </body>
+</html>

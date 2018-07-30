@@ -36,7 +36,7 @@
         display: block;
         margin: auto;
 
-        width: 90%;
+
         bottom: 100px;
       }
       .userInput {
@@ -69,6 +69,33 @@
         top: 50px;
 
       }
+      @media screen and (min-width: 768px) {
+        .labelInput {
+          width: 400px;
+          display: block;
+          margin:auto;
+        }
+        .userInput {
+          width: 100%;
+          display:block;
+          margin: auto;
+        }
+        #submit {
+          width: 400px;
+          display: block;
+          margin: auto;
+        }
+        #login {
+          width: 500px;
+
+
+          border: 1px solid black;
+        }
+        #inputs {
+          padding-top: 200px;
+          padding-bottom: 200px;
+        }
+      }
 
 
 
@@ -84,15 +111,15 @@
       </div>
       <div id = "login">
         <form id = "inputs" method = "POST" action = "/login">
-          <label for "logname">Username/Email: </label><input type = "text" name = "logname" placeholder = "Enter Username..." class = "userInput"/>
+          <div class = "labelInput"><label for "logname">Username: </label><input type = "text" name = "logname" placeholder = "Enter Username..." class = "userInput"/></div>
           <br>
-          <label for "logword">Password: </label><input type = "password" name = "logword" placeholder = "Enter Password..."class = "userInput"/>
+          <div class = "labelInput"><label for "logword">Password: </label><input type = "password" name = "logword" placeholder = "Enter Password..."class = "userInput"/></div>
           <br>
           <input type = "submit" id = "submit">
         </form>
         <br>
         <br>
-        <i><h6>don't have an account? <a href = "/signup">sign up</a> or login as <a href = "">guest</a>
+        <center><i><h6>don't have an account? <a href = "/signup">sign up</a></h6></i></center>
       </div>
     </div>
   </body>
